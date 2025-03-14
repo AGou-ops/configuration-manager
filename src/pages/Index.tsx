@@ -65,6 +65,7 @@ const Index = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedModule, setSelectedModule] = useState<ModuleData | null>(null);
+  const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
   const [expandedModules, setExpandedModules] = useState<Record<string, boolean>>(
     initialModules.reduce((acc, module) => ({ ...acc, [module.id]: true }), {})
   );
@@ -80,7 +81,7 @@ const Index = () => {
         ...node,
         data: {
           ...node.data,
-          onSelect: handleModuleSelect
+          onSelect: (module: ModuleData, moduleId: string) => handleModuleSelect(module, moduleId)
         }
       }));
       setNodes(nodesWithCallbacks);
@@ -110,7 +111,7 @@ const Index = () => {
               position,
               data: { 
                 ...moduleData, 
-                onSelect: handleModuleSelect,
+                onSelect: (module: ModuleData, moduleId: string) => handleModuleSelect(module, moduleId),
                 sectionId: section.id,
               },
             };
@@ -172,7 +173,7 @@ const Index = () => {
       position,
       data: { 
         ...moduleData, 
-        onSelect: handleModuleSelect,
+        onSelect: (module: ModuleData, moduleId: string) => handleModuleSelect(module, moduleId),
         sectionId,
       },
     };
@@ -184,13 +185,22 @@ const Index = () => {
     });
   }, [setNodes]);
 
-  const handleModuleSelect = useCallback((module: ModuleData) => {
+  const handleModuleSelect = useCallback((module: ModuleData, moduleId: string) => {
     setSelectedModule(module);
+    setSelectedModuleId(moduleId);
   }, []);
 
   const handleCloseDetailPanel = useCallback(() => {
     setSelectedModule(null);
+    setSelectedModuleId(null);
   }, []);
+
+  const handleModuleRemove = useCallback((moduleId: string) => {
+    // If the removed module is the currently selected one, reset the detail panel
+    if (selectedModuleId === moduleId) {
+      handleCloseDetailPanel();
+    }
+  }, [selectedModuleId, handleCloseDetailPanel]);
 
   const onConnect = useCallback((params: any) => {
     setEdges((eds) => addEdge(params, eds));
@@ -206,7 +216,7 @@ const Index = () => {
   const onNodeClick = useCallback((_: React.MouseEvent, node: any) => {
     const nodeData = node.data;
     if (nodeData) {
-      handleModuleSelect(nodeData);
+      handleModuleSelect(nodeData, nodeData.id);
     }
   }, [handleModuleSelect]);
 
@@ -239,6 +249,8 @@ const Index = () => {
                         backgroundColor={section.backgroundColor}
                         onDrop={handleModuleDrop}
                         onSelectModule={handleModuleSelect}
+                        selectedModuleId={selectedModuleId}
+                        onModuleRemove={handleModuleRemove}
                       />
                     ))}
                   </div>

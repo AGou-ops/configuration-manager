@@ -9,7 +9,7 @@ interface DraggableModuleNodeProps {
     name: string;
     icon: string;
     version: string;
-    onSelect: (module: ModuleData) => void;
+    onSelect: (module: ModuleData, moduleId: string) => void;
     sectionId: string;
   };
   selected?: boolean;
@@ -32,7 +32,7 @@ export function DraggableModuleNode({ data, selected }: DraggableModuleNodeProps
   return (
     <div 
       className={`px-4 py-3 bg-white rounded-md border ${selected ? 'border-blue-500 shadow-md' : 'border-gray-200 shadow-sm'} w-60`}
-      onClick={() => data.onSelect({ id: data.id, name: data.name, icon: data.icon, version: data.version })}
+      onClick={() => data.onSelect({ id: data.id, name: data.name, icon: data.icon, version: data.version }, data.id)}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center">

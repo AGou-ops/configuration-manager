@@ -11,7 +11,9 @@ interface ModuleSectionProps {
   icon: React.ReactNode;
   backgroundColor: string;
   onDrop: (moduleId: string, moduleType: string, position: { x: number; y: number }) => void;
-  onSelectModule: (module: ModuleData) => void;
+  onSelectModule: (module: ModuleData, moduleId: string) => void;
+  selectedModuleId: string | null;
+  onModuleRemove?: (moduleId: string) => void;
 }
 
 interface PlacedModuleProps {
@@ -61,9 +63,10 @@ const ModuleSection: React.FC<ModuleSectionProps> = ({
   backgroundColor,
   onDrop,
   onSelectModule,
+  selectedModuleId,
+  onModuleRemove,
 }) => {
   const [placedModules, setPlacedModules] = useState<ModuleData[]>([]);
-  const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
   
   // Storage key for this section's modules
   const storageKey = `placed-modules-${id}`;
@@ -139,14 +142,15 @@ const ModuleSection: React.FC<ModuleSectionProps> = ({
 
   const handleRemoveModule = (moduleId: string) => {
     setPlacedModules(prev => prev.filter(m => m.id !== moduleId));
-    if (selectedModuleId === moduleId) {
-      setSelectedModuleId(null);
+    
+    // If the removed module is the currently selected one, notify the parent
+    if (selectedModuleId === moduleId && onModuleRemove) {
+      onModuleRemove(moduleId);
     }
   };
 
   const handleSelectModule = (moduleId: string, module: ModuleData) => {
-    setSelectedModuleId(moduleId);
-    onSelectModule(module); // Pass the selected module to parent component
+    onSelectModule(module, moduleId); // Pass the selected module to parent component
   };
 
   return (
