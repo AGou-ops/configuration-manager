@@ -4,6 +4,7 @@ import { ChevronDown, History, Download, Save, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { CreateConfigDialog } from './CreateConfigDialog';
+import { toast } from 'sonner';
 
 const TopBar = () => {
   const navigate = useNavigate();
@@ -26,6 +27,27 @@ const TopBar = () => {
   const handleVersionSelect = (version: string) => {
     setSelectedVersion(version);
     setIsVersionDropdownOpen(false);
+  };
+
+  const handleHistoryClick = () => {
+    toast.info('历史版本功能暂未实现', {
+      description: '该功能正在开发中，敬请期待',
+      duration: 3000
+    });
+  };
+
+  const handleExportClick = () => {
+    toast.info('导出配置功能暂未实现', {
+      description: '该功能正在开发中，敬请期待',
+      duration: 3000
+    });
+  };
+
+  const handleSaveClick = () => {
+    toast.info('保存功能暂未实现', {
+      description: '该功能正在开发中，敬请期待',
+      duration: 3000
+    });
   };
 
   return (
@@ -64,20 +86,20 @@ const TopBar = () => {
           )}
         </div>
 
-        <Button variant="ghost" className="ml-2">
-          <History className="mr-2 h-4 w-4" />
+        <Button variant="ghost" className="ml-2" onClick={handleHistoryClick}>
+          <History className="mr-1 h-4 w-4" />
           历史版本
         </Button>
       </div>
 
       <div className="flex items-center">
-        <Button variant="outline" className="mr-2">
-          <Download className="mr-2 h-4 w-4" />
+        <Button variant="outline" className="mr-2" onClick={handleExportClick}>
+          <Download className="mr-1 h-4 w-4" />
           导出配置
         </Button>
 
-        <Button variant="outline" className="mr-2">
-          <Save className="mr-2 h-4 w-4" />
+        <Button variant="outline" className="mr-2" onClick={handleSaveClick}>
+          <Save className="mr-1 h-4 w-4" />
           保存
         </Button>
 
