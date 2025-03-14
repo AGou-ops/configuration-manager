@@ -9,10 +9,17 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const { login, isAuthenticated } = useAuth(); // Get the login function and authentication state from AuthContext
+  const { login, isAuthenticated, savedCredentials } = useAuth();
   const navigate = useNavigate();
 
-  // Redirect to home if already authenticated
+  useEffect(() => {
+    if (savedCredentials) {
+      setUsername(savedCredentials.username);
+      setPassword(savedCredentials.password);
+      setRememberMe(true);
+    }
+  }, [savedCredentials]);
+
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/', { replace: true });
@@ -24,8 +31,8 @@ const Login = () => {
     
     // Simple static authentication
     if (username === 'admin' && password === 'admin') {
-      // Call the login function from AuthContext
-      login();
+      // Call the login function from AuthContext with rememberMe
+      login(username, password, rememberMe);
       
       toast.success('登录成功', {
         duration: 2000,
