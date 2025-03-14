@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, History, Download, Save, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,10 @@ import { CreateConfigDialog } from './CreateConfigDialog';
 const TopBar = () => {
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const [selectedVersion, setSelectedVersion] = useState('v2.1.0');
+  const [isVersionDropdownOpen, setIsVersionDropdownOpen] = useState(false);
+
+  const versions = ['v2.0.0', 'v2.1.0', 'v3.0.0', 'v3.1.0'];
 
   const handleLogout = () => {
     logout();
@@ -17,6 +21,11 @@ const TopBar = () => {
   const handleCreateConfig = (values: any) => {
     console.log('创建新配置:', values);
     // TODO: 实现创建配置的逻辑
+  };
+
+  const handleVersionSelect = (version: string) => {
+    setSelectedVersion(version);
+    setIsVersionDropdownOpen(false);
   };
 
   return (
@@ -30,10 +39,29 @@ const TopBar = () => {
         </div>
 
         <CreateConfigDialog onSubmit={handleCreateConfig} />
+&nbsp;&nbsp;当前版本:
+        <div className="relative">
+          <div 
+            className="flex items-center ml-1 border rounded px-2 py-1 cursor-pointer hover:bg-gray-50"
+            onClick={() => setIsVersionDropdownOpen(!isVersionDropdownOpen)}
+          >
+            <span className="mr-2">{selectedVersion}</span>
+            <ChevronDown className="h-4 w-4" />
+          </div>
 
-        <div className="flex items-center ml-4 border rounded px-2 py-1">
-          <span className="mr-2">当前版本: v2.1.0</span>
-          <ChevronDown className="h-4 w-4" />
+          {isVersionDropdownOpen && (
+            <div className="absolute z-10 mt-1 w-full right-0 bg-white border rounded-md shadow-lg">
+              {versions.map((version) => (
+                <div
+                  key={version}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-right text-left"
+                  onClick={() => handleVersionSelect(version)}
+                >
+                  {version}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <Button variant="ghost" className="ml-2">

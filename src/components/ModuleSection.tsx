@@ -67,6 +67,7 @@ const ModuleSection: React.FC<ModuleSectionProps> = ({
   onModuleRemove,
 }) => {
   const [placedModules, setPlacedModules] = useState<ModuleData[]>([]);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   
   // Storage key for this section's modules
   const storageKey = `placed-modules-${id}`;
@@ -84,6 +85,8 @@ const ModuleSection: React.FC<ModuleSectionProps> = ({
         onDrop(moduleData.id, id, position);
       });
     }
+    // 初始加载完成后设置标记
+    setIsInitialLoad(false);
   }, [id, onDrop]);
   
   // Save modules to storage whenever they change
@@ -132,9 +135,12 @@ const ModuleSection: React.FC<ModuleSectionProps> = ({
       // Add module to this section
       setPlacedModules(prev => [...prev, moduleData]);
       
-      toast.success(`成功添加 ${moduleData.name} 模块`, {
-        duration: 2000,
-      });
+      // 只在非初始加载时显示提示
+      if (!isInitialLoad) {
+        toast.success(`成功添加 ${moduleData.name} 模块`, {
+          duration: 2000,
+        });
+      }
     } catch (error) {
       console.error("Failed to parse dragged module data:", error);
     }
