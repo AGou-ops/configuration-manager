@@ -4,7 +4,7 @@ Follow these steps:
 
 ```sh
 # Step 1: Clone the repository using the project's Git URL.
-git clone git@gitlab.info.dbappsecurity.com.cn:devops-ailpha/configuration-manager.git
+git clone <this_repo>
 
 # Step 2: Navigate to the project directory.
 cd configuration-manager
