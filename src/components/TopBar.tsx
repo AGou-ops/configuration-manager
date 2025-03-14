@@ -1,8 +1,9 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, ChevronDown, History, Download, Save, LogOut } from 'lucide-react';
+import { ChevronDown, History, Download, Save, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
+import { CreateConfigDialog } from './CreateConfigDialog';
 
 const TopBar = () => {
   const navigate = useNavigate();
@@ -11,6 +12,11 @@ const TopBar = () => {
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const handleCreateConfig = (values: any) => {
+    console.log('创建新配置:', values);
+    // TODO: 实现创建配置的逻辑
   };
 
   return (
@@ -23,10 +29,7 @@ const TopBar = () => {
           容器配置管理平台
         </div>
         
-        <Button variant="default" className="ml-4 bg-blue-600 hover:bg-blue-700">
-          <PlusCircle className="mr-2 h-4 w-4" />
-          新建配置
-        </Button>
+        <CreateConfigDialog onSubmit={handleCreateConfig} />
         
         <div className="flex items-center ml-4 border rounded px-2 py-1">
           <span className="mr-2">当前版本: v2.1.0</span>
